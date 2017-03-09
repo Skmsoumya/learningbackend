@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{page.title}}</title>
+	</head>
+	<body>
+		<form method="post">
+			<h2>Please enter your user details</h2>
+			<br>
+			<label>
+				User Name
+				<input type="text" name="userName" value="{{page.userName}}"/>
+				{% if page.errors.email %}
+					<span style="color: red;">Please Enter A Valid User Name!</span>
+				{% endif %}
+			</label>
+			<br>
+			<label>
+				Password
+				<input type="password" name="password">
+				{% if page.errors.password %}
+					<span style="color: red;">Please Enter A Valid Password!</span>
+				{% endif %}
+			</label>
+			<br>
+			<label>
+				Retype Password
+				<input type="password" name="rePassword">
+				{% if page.errors.rePass %}
+					<span style="color: red;">Passwords don't Match!</span>
+				{% endif %}
+			</label>
+			<br>
+			<label>
+				Email (Optional)
+				<input type="text" name="email" value="{{page.email}}">
+				{% if page.errors.email %}
+					<span style="color: red;">Please Enter A Valid Email!</span>
+				{% endif %}
+			</label>
+
+			<br>
+			<br>
+
+			<button type="submit">Sign Up</button>
+		</form>
+	</body>
+</html>
