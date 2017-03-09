@@ -14,11 +14,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import webapp2
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+import os
+import webapp2
+import jinja2
+template_dir = os.path.join(os.path.dirname(__file__), "templates")
+jinja_env = jinja2.Environment( loader = jinja2.FileSystemLoader(template_dir),
+								autoescape=True)
+
+from google.appengine.ext import db
+
+class Art(db.Model):
+	title = db.StringProperty(required = True)
+	art = db.TextProperty(required = True)
+	created = db.DateTimeProperty(auto_now_add = True)
+
+class Handler(webapp2.RequestHandler):
+    def write(self, *arg, **kwarg):
+    	self.response.write(*arg, **kwarg)
+    def render_string(self, template, **params):
+    	t = jinja_env.get_template(template);
+    	return t.render(params);
+    def render(self, tempalte, **params):
+    	self.write(self.render_string(tempalte, **params))
+
+class MainHandler(Handler):
+	def render_main(self, title="", art="", error=""):
+		arts = db.GqlQuery("SELECT * FROM Art ORDER BY created DESC")
+		print arts
+
+		self.render("mainTemplate.html", arts = arts, title = title, art=art, error=error)
+	def get(self):
+		self.render_main()
+	def post(self):
+		title = self.request.get("title")
+		art = self.request.get("art")
+		if title and art:
+			a = Art(title = title, art = art)
+			a.put()
+
+			self.redirect("/")
+		else:
+			error = "Both Title and Art Needed"
+			self.render_main(title, art, error)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)

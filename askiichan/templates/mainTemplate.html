@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>/ASCII/</title>
+	</head>
+	<body>
+		<h2>/ASCII/</h2>
+		<br>
+		<form method="post">
+			<label>
+				<div>
+					Title
+				</div>
+				<input type="text" name="title" value="{{title}}">
+			</label>
+			<label>
+				<div>Ascii Art</div>
+				<textarea name="art" value="{{art}}" style="min-height: 400px; min-width: 500px"></textarea>
+			</label>
+			{% if error %}
+				<label>
+					<div style="color: red;">
+						{{error}}
+					</div>
+				</label>
+			{% endif %}
+			<div>
+				<button type="submit">Submit Art</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<div class="artsHolder">
+			{% if arts %}
+				{%for art in arts%}
+					<div class="art">
+						<h3>{{art.title}}</h3>
+						<pre>{{art.art}}</pre>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</body>
+</html>
